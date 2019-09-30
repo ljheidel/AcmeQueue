@@ -11,12 +11,14 @@ using namespace std;
 const char *queue_path = QUEUE_PATH;
 
 AcmeQueue::AcmeQueue(const char *qn) {
-  AcmeQueue(queue_path, qn);
+  this->CreateDir(queue_path, qn);
 }
 
 AcmeQueue::AcmeQueue(const char *qp, const char *qn){
-  // queueName = (char *)qn;
-  // queuePath = (char *)qp;
+  this->CreateDir(qp, qn);
+}
+
+void AcmeQueue::CreateDir(const char *qp, const char *qn) {
   int e;
   struct stat sb;
 

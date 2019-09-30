@@ -5,6 +5,7 @@ class AcmeQueue {
     char dirName[255];
     char* queueName;
     char* queuePath;
+    void CreateDir(const char *qp, const char *qn);
   public:
     AcmeQueue(const char *qn); 
     AcmeQueue(const char *qp, const char *qn);
