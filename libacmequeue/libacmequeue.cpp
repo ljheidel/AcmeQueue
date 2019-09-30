@@ -17,12 +17,16 @@ AcmeQueue::AcmeQueue(const char *qn) {
 AcmeQueue::AcmeQueue(const char *qp, const char *qn){
   // queueName = (char *)qn;
   // queuePath = (char *)qp;
-  sprintf(dirName, "%s/%s", qp, qn);
-  if (1) printf("queuepath is %s\ndirname is %s\n", qp, dirName);
-  DIR* dir = opendir(dirName);
-  if (dir == NULL) {
-    int mkdir_result = mkdir(dirName, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+  DIR *dir;
+  sprintf(this->dirName, "%s/%s", qp, qn);
+  if (1) printf("queuepath in constructor is %s\ndirname is %s\naddress of dirName is %p", qp, dirName, &dirName);
+  while (!dir) {
+    dir = opendir(dirName);
+    if (!dir) {
+      int mkdir_result = mkdir(dirName, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    }
   }
+  if (1) printf("queuepath in constructor is %s\ndirname is %s\naddress of dirName is %p", qp, dirName, &dirName);
   closedir(dir);
 }
 
@@ -65,8 +69,9 @@ int AcmeQueue::Push(const char *s){
   FILE *queue_file_fp;
   DIR *queue_dir_dp;
   struct dirent *directory_entry;
-
-  printf("dir name in Push is %s\n", dirName);  
+  printf("bang\n");
+  printf("queuepath in Push is %s\n", this->dirName);  
+  printf("addr %p\n", &dirName);
   if ((queue_dir_dp = opendir(dirName))) {
     while((directory_entry = readdir(queue_dir_dp)) != NULL) {
       if ((exist_file_number = atoi(directory_entry->d_name))) {
