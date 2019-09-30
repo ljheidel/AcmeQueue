@@ -17,17 +17,21 @@ AcmeQueue::AcmeQueue(const char *qn) {
 AcmeQueue::AcmeQueue(const char *qp, const char *qn){
   // queueName = (char *)qn;
   // queuePath = (char *)qp;
-  DIR *dir;
-  sprintf(this->dirName, "%s/%s", qp, qn);
-  if (1) printf("queuepath in constructor is %s\ndirname is %s\naddress of dirName is %p", qp, dirName, &dirName);
-  while (!dir) {
-    dir = opendir(dirName);
-    if (!dir) {
-      int mkdir_result = mkdir(dirName, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+  int e;
+  struct stat sb;
+
+  sprintf(dirName, "%s/%s", qp, qn);
+  e = stat(dirName, &sb);
+  if (!e) {
+    if (sb.st_mode & S_IFDIR) {
+      if (1) printf("directory %s already exists\n", dirName);
+    } else {
+      if (1) printf("%s exists and is not a directory.\n", dirName);
     }
+  } else if (errno == ENOENT) {
+    if (1) printf("%s doesnt exist - creating.\n", dirName);
+    int mkdir_result = mkdir(dirName, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
   }
-  if (1) printf("queuepath in constructor is %s\ndirname is %s\naddress of dirName is %p", qp, dirName, &dirName);
-  closedir(dir);
 }
 
 bool AcmeQueue::Pop(char *s) {
@@ -70,8 +74,7 @@ int AcmeQueue::Push(const char *s){
   DIR *queue_dir_dp;
   struct dirent *directory_entry;
   printf("bang\n");
-  printf("queuepath in Push is %s\n", this->dirName);  
-  printf("addr %p\n", &dirName);
+  if (1) printf("dirName in Pop is %s\ndirname\n", dirName);
   if ((queue_dir_dp = opendir(dirName))) {
     while((directory_entry = readdir(queue_dir_dp)) != NULL) {
       if ((exist_file_number = atoi(directory_entry->d_name))) {

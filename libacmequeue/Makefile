@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-I. -L. -lc++
+CFLAGS=-I. -L. -lc++ -O
 
 libacmequeue.o: libacmequeue.cpp libacmequeue.h
 	$(CC) -c -o $@ $< $(CFLAGS)
