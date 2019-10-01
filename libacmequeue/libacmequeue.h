@@ -5,10 +5,14 @@ class AcmeQueue {
     char dirName[255];
     char* queueName;
     char* queuePath;
-    void CreateDir(const char *qp, const char *qn);
+    bool Debug;
+    void createDir(const char *qp, const char *qn);
+    bool getDebug();
   public:
     AcmeQueue(const char *qn); 
     AcmeQueue(const char *qp, const char *qn);
     int Push(const char *s);
     bool Pop(char *s);
+    void List();
+    void setDebug(bool d);
 };
