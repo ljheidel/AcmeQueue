@@ -63,7 +63,6 @@ bool AcmeQueue::Pop(char *s) {
   int max_file_number = 0;
   bool queue_empty = true;
   char file_name[255];
-  char c;
   int count = 0;
   FILE *queue_file_fp;
   DIR *queue_dir_dp;
@@ -83,11 +82,8 @@ bool AcmeQueue::Pop(char *s) {
   sprintf(file_name, "%s/%08d", this->dirName, max_file_number);
   if (this->getDebug()) fprintf(stderr, "reading from %s\n", file_name);
   if((queue_file_fp = fopen(file_name, "r"))) {
-    while (!feof(queue_file_fp)) {
-      s[count] = fgetc(queue_file_fp);
-      count++;
-    }
-    s[count] = '\0';
+    while (!feof(queue_file_fp)) *s++ = fgetc(queue_file_fp); 
+    *s = '\0';
     fclose(queue_file_fp);
     if (this->getDebug()) fprintf(stderr, "removing file %s\n", file_name);
     remove(file_name);
@@ -99,8 +95,8 @@ int AcmeQueue::Push(const char *s){
   int exist_file_number = 1;
   int file_number = 1;
   char file_name[255];
-  FILE *queue_file_fp;
   DIR *queue_dir_dp;
+  FILE *queue_file_fp;
   struct dirent *directory_entry;
 
   if (this->getDebug()) fprintf(stderr, "push to %s\n", this->dirName); 
@@ -120,7 +116,7 @@ int AcmeQueue::Push(const char *s){
   if (this->getDebug()) fprintf(stderr, "writing to file %s\n", file_name);
 
   if ((queue_file_fp = fopen(file_name, "w"))) {
-    fprintf(queue_file_fp, "%s", s);
+    while (*s != '\0') fputc(*s++, queue_file_fp); 
     fclose(queue_file_fp);
   } else {
     return -2;
