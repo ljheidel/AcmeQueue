@@ -1,3 +1,23 @@
+/*
+ * libacmequeue - A simple persistent FIFO queue for
+ *                queing arbitrary data.
+ *
+ * Copyright (C) 2019 Acme Amalgamaged Widgets
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 using namespace std;
 #include <iostream>
 #include <fstream>
@@ -9,7 +29,11 @@ using namespace std;
 #include "libacmequeue.h"
 
 const char *queue_path = QUEUE_PATH;
-
+/*
+ * Two constructors.  One takes the queue path
+ * the other only the queue name.
+ *
+ */
 AcmeQueue::AcmeQueue(const char *qn) {
   this->setDebug(false);
   this->createDir(queue_path, qn);
@@ -19,7 +43,10 @@ AcmeQueue::AcmeQueue(const char *qp, const char *qn){
   this->setDebug(false);
   this->createDir(qp, qn);
 }
-
+/*
+ * Create the queue directory.
+ *
+ */
 void AcmeQueue::createDir(const char *qp, const char *qn) {
   int e;
   struct stat sb;
@@ -37,7 +64,11 @@ void AcmeQueue::createDir(const char *qp, const char *qn) {
     int mkdir_result = mkdir(this->dirName, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
   }
 }
-
+/*
+ * Turn on debug messages by setting
+ * Debug to true.
+ *
+ */
 void AcmeQueue::setDebug(bool d) {
   this->Debug = d;
 }
@@ -45,7 +76,10 @@ void AcmeQueue::setDebug(bool d) {
 bool AcmeQueue::getDebug() {
   return this->Debug;
 }
-
+/*
+ * List the contents of the queue and their size.
+ *
+ */
 void AcmeQueue::List() {
   DIR *queue_dir_dp;
   struct dirent *directory_entry;
@@ -57,7 +91,12 @@ void AcmeQueue::List() {
     }
   }
 }
-
+/*
+ * Pop a element off of the queue and 
+ * store its contents in the char[] pointed
+ * to by s.
+ *
+ */
 bool AcmeQueue::Pop(char *s) {
   int file_number = 0;
   int max_file_number = 0;
@@ -90,7 +129,11 @@ bool AcmeQueue::Pop(char *s) {
   }
   return !queue_empty;
 }
-
+/*
+ * Push the string pointed to by s
+ * in the queue.
+ *
+ */
 int AcmeQueue::Push(const char *s){
   int exist_file_number = 1;
   int file_number = 1;
